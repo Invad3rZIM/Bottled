@@ -2,5 +2,11 @@
 	"ImportPath": "bottled",
 	"GoVersion": "go1.10",
 	"GodepVersion": "v80",
-	"Deps": []
+	"Deps": [
+		{
+			"ImportPath": "github.com/go-chi/chi",
+			"Comment": "v4.0.1",
+			"Rev": "1a6bb108ccf279c8dac6f9bad857d773b4f9b421"
+		}
+	]
 }
