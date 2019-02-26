@@ -25,13 +25,15 @@ func (bm *BottleManager) AcceptBottle(id int) {
 	b.LoseLife(1) //accepting a bottle costs 1 life
 }
 
-func (bm *BottleManager) CreateBottle(senderID int, message string, bottleType string, lives int, point Point) {
+func (bm *BottleManager) CreateBottle(senderID int, message string, bottleType string, lives int, point Point) *Bottle {
 	b := NewBottle(senderID, message, bottleType, lives)
 	b.AddLocation(point)
 
 	bm.bottles[b.bottleID] = b
 
 	fmt.Println(b)
+
+	return b
 }
 
 func (h *Handler) CreateBottleHandler(w http.ResponseWriter, r *http.Request) {
@@ -64,12 +66,12 @@ func (h *Handler) CreateBottleHandler(w http.ResponseWriter, r *http.Request) {
 		userID:  senderID,
 	}
 
-	h.bottleManager.CreateBottle(senderID, requestBody["message"].(string), requestBody["bottleType"].(string), bottleLives, p)
+	bottle := h.bottleManager.CreateBottle(senderID, requestBody["message"].(string), requestBody["bottleType"].(string), bottleLives, p)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
 	// In the future we could report back on the status of our DB, or our cache
 	// (e.g. Redis) by performing a simple PING, and include them in the response.
-	io.WriteString(w, fmt.Sprintf("%d", len(h.bottleManager.bottles)))
+	io.WriteString(w, fmt.Sprintf("Total Bottles: %d \n Just created! %v", len(h.bottleManager.bottles), bottle))
 }
