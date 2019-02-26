@@ -24,7 +24,7 @@ func (h *Handler) AddWounded(userID int) {
 	h.NewlyHurt <- hc
 }
 
-func (h *Handler) MedicManager(workerCount int) {
+func (h *Handler) MedicManager(workerCount int, regenTime int) {
 	//infinite loop
 	for {
 		//add all the fresh wounds at the start of the cycle
@@ -43,6 +43,6 @@ func (h *Handler) MedicManager(workerCount int) {
 
 		wg.Wait()
 
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(time.Duration(regenTime) * time.Second)
 	}
 }

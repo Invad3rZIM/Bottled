@@ -5,46 +5,39 @@ import (
 	"time"
 )
 
-/*
-
-	ai
-	how technology changes our lives
-	kermit the frog
-	the meaning of intelligence
-	what is real
-	what is life
-
-	i'm running out of words
-
-	inspriation comes in waves...
-
-	i'd have to think about it, play around with things a little bit.
-
-	i'm not sure yet, but i'm going to keep writing the things that i'm thinking to imrpove my stream of consciousness abilities. i'm also typing things.
-
-	simulacrum
-
-	ethics of ai
-
-	meerrrrrr
-*/
-
 type Bottle struct {
-	bottleID int
-	senderID int
-	message  string
-	lives    int
+	bottleID   int
+	SenderID   int    `json:"senderID"`
+	Message    string `json:"message"`
+	BottleType string
+	Lives      int `json:"lives"`
+	Point
 }
 
-func NewBottle(senderID int, message string, lives int) *Bottle {
+func (b *Bottle) AddLocation(p Point) {
+	b.Point = p
+}
+
+func NewBottle(senderID int, message string, bottleType string, lives int) *Bottle {
 	b := Bottle{
-		bottleID: GenBottleID(),
-		senderID: senderID,
-		message:  message,
-		lives:    lives,
+		bottleID:   GenBottleID(),
+		SenderID:   senderID,
+		Message:    message,
+		Lives:      lives,
+		BottleType: bottleType,
 	}
 
 	return &b
+}
+
+func (b Bottle) GetBottleID() int {
+	return b.bottleID
+}
+
+func (b *Bottle) LoseLife(takeaway int) bool {
+	b.Lives = b.Lives - takeaway
+
+	return b.Lives > 0
 }
 
 //remap to make sure bottlesID is unique

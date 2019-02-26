@@ -3,9 +3,10 @@ package handlers
 import "net/http"
 
 type Handler struct {
-	UserCache    map[int]*User
-	NewlyHurt    chan *HeartContainer
-	BrokenHearts chan *HeartContainer
+	UserCache     map[int]*User
+	NewlyHurt     chan *HeartContainer
+	BrokenHearts  chan *HeartContainer
+	bottleManager *BottleManager
 }
 
 func (h *Handler) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -18,6 +19,7 @@ func NewHandler() *Handler {
 	h.UserCache = make(map[int]*User)
 	h.NewlyHurt = make(chan *HeartContainer, 100000)
 	h.BrokenHearts = make(chan *HeartContainer, 100000)
+	h.bottleManager = NewBottleManager()
 
 	return &h
 }
