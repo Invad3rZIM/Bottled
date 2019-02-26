@@ -43,9 +43,7 @@ func (bm *BottleManager) GetNearestBottles(bottleType string, p Point, amount in
 }
 
 type DistanceNode struct {
-	Left   DistanceNode
-	Right  DistanceNode
-	Parent DistanceNode
+	Relations []*DistanceNode
 
 	Distance float64
 }
