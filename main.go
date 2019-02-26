@@ -34,6 +34,10 @@ func ServerAliveHandler(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, requestBody["id"].(string))
 }
 
+func Ping(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "Pong")
+}
+
 func main() {
 	r := mux.NewRouter()
 
@@ -50,6 +54,7 @@ func main() {
 	//	h.Hurt(users["rob"].GetUserID(), 5)
 
 	r.HandleFunc("/alive", ServerAliveHandler)
+	r.HandleFunc("/", Ping)
 	r.HandleFunc("/bottle/create", h.CreateBottleHandler).Methods("POST")
 
 	r.HandleFunc("/bottle/receive", h.CreateBottleHandler).Methods("GET")
