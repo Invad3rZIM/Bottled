@@ -4,11 +4,9 @@ package main
 import (
 	"bottled/handlers"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -42,6 +40,7 @@ func main() {
 	r := mux.NewRouter()
 
 	h := handlers.NewHandler()
+
 	go h.MedicManager(10, 60)
 
 	users := make(map[string]*handlers.User)
@@ -49,8 +48,8 @@ func main() {
 	users["rob"] = h.CreateUser("rob")
 
 	//u := handlers.NewUser("danny")
-	h.Hurt(users["kirk"].GetUserID(), 12)
-	h.Hurt(users["rob"].GetUserID(), 5)
+	//	h.Hurt(users["kirk"].GetUserID(), 12)
+	//	h.Hurt(users["rob"].GetUserID(), 5)
 	//	h.Hurt(users["rob"].GetUserID(), 5)
 
 	r.HandleFunc("/alive", ServerAliveHandler)
@@ -63,10 +62,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	for {
-		for _, v := range users {
-			fmt.Printf("%s hearts = %.2f\n", v.GetName(), v.CurrentLives())
-		}
-		time.Sleep(60000 * time.Millisecond)
-	}
+	//	for {
+	//		for _, v := range users {
+	//			fmt.Printf("%s hearts = %.2f\n", v.GetName(), v.CurrentLives())
+	//		}
+	//		time.Sleep(60000 * time.Millisecond)
+	//	}*/
 }

@@ -11,6 +11,7 @@ type Bottle struct {
 	Message    string `json:"message"`
 	BottleType string
 	Lives      int `json:"lives"`
+	bottleAge  int
 	Point
 }
 
@@ -18,16 +19,21 @@ func (b *Bottle) AddLocation(p Point) {
 	b.Point = p
 }
 
-func NewBottle(senderID int, message string, bottleType string, lives int) *Bottle {
+func NewBottle(senderID int, message string, bottleType string, lives int, age int) *Bottle {
 	b := Bottle{
 		bottleID:   GenBottleID(),
 		SenderID:   senderID,
 		Message:    message,
 		Lives:      lives,
 		BottleType: bottleType,
+		bottleAge:  age,
 	}
 
 	return &b
+}
+
+func (b Bottle) GetBottleAge() int {
+	return b.bottleAge
 }
 
 func (b Bottle) GetBottleID() int {
