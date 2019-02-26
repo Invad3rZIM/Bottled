@@ -1,8 +1,12 @@
 {
-	"ImportPath": "bottled",
+	"ImportPath": "olympia",
 	"GoVersion": "go1.10",
 	"GodepVersion": "v80",
 	"Deps": [
+		{
+			"ImportPath": "bottled/handlers",
+			"Rev": "bfe1d77e342befc52cc784ef8a3f93fc9a460416"
+		},
 		{
 			"ImportPath": "github.com/gorilla/mux",
 			"Comment": "v1.7.0-1-g8559a4f",
