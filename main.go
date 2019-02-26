@@ -52,6 +52,8 @@ func main() {
 	r.HandleFunc("/alive", ServerAliveHandler)
 	r.HandleFunc("/bottle/create", h.CreateBottleHandler).Methods("POST")
 
+	r.HandleFunc("/bottle/receive", h.CreateBottleHandler).Methods("GET")
+
 	err := http.ListenAndServe(":"+os.Getenv("PORT"), r)
 	if err != nil {
 		panic(err)
