@@ -1,1 +1,1 @@
-web: bottled
+web: olympia
