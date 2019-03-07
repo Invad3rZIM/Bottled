@@ -1,0 +1,60 @@
+//psql queries
+
+CREATE TABLE Users (
+userid int PRIMARY KEY NOT NULL ,
+name varchar(30) NOT NULL,
+pin  int NOT NULL,
+friendKey int NOT NULL,
+caps int NOT NULL,
+maxHearts int NOT NULL);
+
+CREATE TABLE Hearts (
+userid int PRIMARY KEY NOT NULL ,
+count float8 NOT NULL,
+max float8 NOT NULL,
+rate float8 NOT NULL);
+
+CREATE TABLE Events (
+event_id serial PRIMARY KEY NOT NULL ,
+
+event_min_start_day int NOT NULL,
+event_max_start_day int NOT NULL,
+event_min_start_month int NOT NULL,
+event_max_start_month int NOT NULL,
+event_min_start_time int NOT NULL,
+event_max_start_time int NOT NULL,
+event_duration int NOT NULL,
+arena_id int NOT NULL, 
+
+security_required int NOT NULL,
+security_obtained int NOT NULL,
+
+tickets_sold int NOT NULL,
+ticket_price float8 NOT NULL,
+ticket_discount_price float8 NOT NULL
+
+schedule_id int NOT NULL,
+manually_scheduled BOOLEAN DEFAULT FALSE,
+scheduled_time int NOT NULL,
+scheduled_day int NOT NULL,
+scheduled_month int NOT NULL);
+
+CREATE TABLE Tickets(
+ticket_id int PRIMARY KEY NOT NULL,
+event_id int NOT NULL,
+user_id int NOT NULL,
+PricePaid float8 NOT NULL);
+
+CREATE TABLE AthletesSchedules (
+athlete_id int NOT NULL,
+obligation_type int NOT NULL,
+day int NOT NULL,
+start_time int NOT NULL,
+month int NOT NULL,
+duration int NOT NULL);
+
+CREATE TABLE Security(
+guard_id int PRIMARY KEY NOT NULL,
+obligation_arena_id int NOT NULL,
+priority int NOT NULL,
+assigned_officer_id int NOT NULL);

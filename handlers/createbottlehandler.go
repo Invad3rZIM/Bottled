@@ -1,9 +1,10 @@
 package handlers
 
 import (
+	bottle "bottled/bottles/bottle"
+	"bottled/points"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"strconv"
 )
@@ -11,17 +12,47 @@ import (
 func (h *Handler) CreateBottleHandler(w http.ResponseWriter, r *http.Request) {
 	var requestBody map[string]interface{}
 
-	json.NewDecoder(r.Body).Decode(&requestBody)
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
 
-	//	if err != nil {
-	//		err = errors.Trace(err)
-	//		core.WriteBadRequestErrorResponse(w)
-	//		return
-	//	}
+	if err != nil {
+		WriteBadRequestErrorResponse(&w)
+		return
+	}
 
-	//conver to ints here for
-	senderID, _ := strconv.Atoi(requestBody["userID"].(string))
-	bottleLives, _ := strconv.Atoi(requestBody["bottleLife"].(string))
+	//user verification
+	sid, _ := strconv.Atoi(requestBody["sid"].(string))
+	pin, _ := strconv.Atoi(requestBody["pin"].(string))
+
+	if !h.UserCache.ValidPin(sid, pin) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnauthorized)
+
+		s := Status{
+			Status:  http.StatusUnauthorized,
+			Message: "Invalid Pin",
+		}
+		//return copy of user for client records
+		json.NewEncoder(w).Encode(&s)
+		return
+	}
+
+	//check if sufficient hearts...
+
+	err = h.HeartCache.Harm(sid, 4)
+
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnauthorized)
+
+		s := Status{
+			Status:  http.StatusUnauthorized,
+			Message: "Insufficient Hearts",
+		}
+		//return copy of user for client records
+		json.NewEncoder(w).Encode(&s)
+		return
+	}
+
 	enabled := false
 	var long, lat float64
 
@@ -31,41 +62,46 @@ func (h *Handler) CreateBottleHandler(w http.ResponseWriter, r *http.Request) {
 		long, _ = strconv.ParseFloat(requestBody["long"].(string), 64)
 	}
 
-	p := Point{
-		enabled: enabled,
-		lat:     lat,
-		long:    long,
-		userID:  senderID,
+	//bottle := h.BottleManager.CreateBottle(senderID, requestBody["message"].(string), requestBody["bottleType"].(string), bottleLives, p)
+
+	bottle := bottle.Bottle{
+		SenderID: sid,
+		Tag:      requestBody["tag"].(string),
+		Message:  requestBody["message"].(string),
+		Lives:    3,
+		Age:      (h.BottleCache).BottlesMade,
+		Point: points.Point{
+			Enabled: enabled,
+			Lat:     lat,
+			Long:    long,
+			Age:     h.BottleCache.BottlesMade,
+		},
 	}
 
-	bottle := h.bottleManager.CreateBottle(senderID, requestBody["message"].(string), requestBody["bottleType"].(string), bottleLives, p)
+	h.BottleCache.DB.AddBottle(&bottle)
+
+	bottle.Point.BottleID = bottle.BottleID
+	//list of EVERY SINGLE BOTTLE
+	h.BottleCache.AllBottles[bottle.BottleID] = &bottle
+
+	if bottle.Point.Enabled {
+		h.BottleCache.Bottles["local"][bottle.Tag][bottle.BottleID] = &bottle
+		fmt.Printf("\n%v", h.BottleCache.Bottles["local"][bottle.Tag][bottle.BottleID])
+	} else {
+		h.BottleCache.Bottles["global"][bottle.Tag][bottle.BottleID] = &bottle
+	}
+
+	h.BottleCache.BottlesMade = h.BottleCache.BottlesMade + 1
+
+	h.BottleCache.BottleSenders[bottle.BottleID] = bottle.SenderID
+
+	h.UserCache.AddCaps(sid, 1)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
+	json.NewEncoder(w).Encode(&bottle)
 	// In the future we could report back on the status of our DB, or our cache
 	// (e.g. Redis) by performing a simple PING, and include them in the response.
 
-	s := StatusMessage{
-		Status: 200,
-	}
-	json.NewEncoder(w).Encode(s)
-
-	io.WriteString(w, fmt.Sprintf("Total Bottles: %d \n Just created! %v", len(h.bottleManager.localBottles)+len(h.bottleManager.globalBottles), bottle))
-}
-
-func (bm *BottleManager) CreateBottle(senderID int, message string, bottleType string, lives int, point Point) *Bottle {
-	b := NewBottle(senderID, message, bottleType, lives, bm.bottlesMade)
-
-	if point.enabled {
-		b.AddLocation(point)
-
-		bm.localBottles[b.bottleID] = b
-	} else {
-		bm.globalBottles[b.bottleID] = b
-	}
-
-	bm.bottlesMade = bm.bottlesMade + 1
-
-	return b
 }

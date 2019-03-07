@@ -1,34 +1,44 @@
 package handlers
 
-import "net/http"
+import (
+	"bottled/bottles"
+	"bottled/database"
+
+	"bottled/hearts"
+	"bottled/messages"
+	"bottled/users"
+)
 
 type Handler struct {
-	UserCache     map[int]*User
-	NewlyHurt     chan *HeartContainer
-	BrokenHearts  chan *HeartContainer
-	bottleManager *BottleManager
+	//	NewlyHurt     chan *HeartContainer
+	//	BrokenHearts  chan *HeartContainer
+	UserCache    *users.UserCache
+	BottleCache  *bottles.BottleCache
+	MessageCache *messages.MessageCache
+	HeartCache   *hearts.HeartCache
+
+	DB *database.DatabaseConnection
 }
 
-func (h *Handler) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
-	h.CreateUser("TESTING")
-}
-
-func NewHandler() *Handler {
+func NewHandler(d *database.DatabaseConnection) *Handler {
 	var h Handler
 
-	h.UserCache = make(map[int]*User)
-	h.NewlyHurt = make(chan *HeartContainer, 100000)
-	h.BrokenHearts = make(chan *HeartContainer, 100000)
-	h.bottleManager = NewBottleManager()
+	h.UserCache = users.LoadUserCache(d) //needs sql hookup
+	h.MessageCache = messages.NewMessageCache(d)
+	h.BottleCache = bottles.NewBottleCache(d)
+	h.HeartCache = hearts.NewHeartCache(d)
+
+	h.DB = d
 
 	return &h
 }
 
+/*
 func (h *Handler) AddUserCache(u *User) {
 	h.UserCache[u.GetUserID()] = u
 }
 
-func (h *Handler) CreateUser(name string) *User {
+func (h *Handler) CreateUserToDatabase(name string) *User {
 
 	u := NewUser(name)
 
@@ -42,3 +52,4 @@ func (h *Handler) Hurt(userID int, pain int) {
 	u.Hurt(pain)
 	h.AddWounded(u.GetUserID())
 }
+*/
