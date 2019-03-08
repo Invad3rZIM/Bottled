@@ -101,6 +101,7 @@ func main() {
 	r.HandleFunc("/messages/getnew", h.GetNewMessagesHandler).Methods("GET")
 
 	err = http.ListenAndServe(":"+os.Getenv("PORT"), r)
+	fmt.Println(os.Getenv("PORT"))
 	if err != nil {
 		panic(err)
 	}
