@@ -9,16 +9,16 @@ import (
 )
 
 type UserCache struct {
-	Users        map[int]*u.User
-	DB           *database.DatabaseConnection
+	Users map[int]*u.User
+	//	DB           *database.DatabaseConnection
 	FriendCodes  map[int][]*u.FriendKey
 	DBCapChanges chan *u.User
 }
 
 func NewUserCache(d *database.DatabaseConnection) *UserCache {
 	uc := UserCache{
-		Users:        make(map[int]*u.User),
-		DB:           d,
+		Users: make(map[int]*u.User),
+		//DB:           d,
 		FriendCodes:  make(map[int][]*u.FriendKey),
 		DBCapChanges: make(chan *u.User),
 	}
@@ -34,27 +34,27 @@ func (uc UserCache) GetUser(userID int) (*u.User, error) {
 	}
 
 	//pull from database
-	user, err := uc.DB.GetUser(userID)
+	//	user, err := uc.DB.GetUser(userID)
 
-	if err != nil {
-		return nil, err
-	}
+	//	if err != nil {
+	//		return nil, err
+	//	}
 
-	uc.Users[user.UserID] = user
+	//	uc.Users[user.UserID] = user
 
 	//instantiate the friend mailbox
-	if _, ok := uc.FriendCodes[userID]; !ok {
-		uc.FriendCodes[userID] = []*u.FriendKey{}
-	}
+	//	if _, ok := uc.FriendCodes[userID]; !ok {
+	//		uc.FriendCodes[userID] = []*u.FriendKey{}
+	//	}
 
-	return user, nil
-
+	//	return user, nil
+	return nil, errors.New("User not found")
 }
 
 //infinite loop of database changes
 func (uc *UserCache) DatabaseUpdater() {
 	for {
-		uc.DB.UpdateCaps(<-uc.DBCapChanges)
+		//	uc.DB.UpdateCaps(<-uc.DBCapChanges)
 	}
 }
 
@@ -68,7 +68,7 @@ func (uc *UserCache) AddCaps(userID int, quantity int) error {
 
 	u.AddCap(quantity)
 
-	uc.DBCapChanges <- u
+	//	uc.DBCapChanges <- u
 
 	fmt.Println("DDDDDDD")
 

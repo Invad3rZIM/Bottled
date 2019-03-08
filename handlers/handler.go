@@ -17,7 +17,7 @@ type Handler struct {
 	MessageCache *messages.MessageCache
 	HeartCache   *hearts.HeartCache
 
-	DB *database.DatabaseConnection
+	//	DB *database.DatabaseConnection
 }
 
 func NewHandler(d *database.DatabaseConnection) *Handler {
@@ -28,7 +28,7 @@ func NewHandler(d *database.DatabaseConnection) *Handler {
 	h.BottleCache = bottles.NewBottleCache(d)
 	h.HeartCache = hearts.NewHeartCache(d)
 
-	h.DB = d
+	//	h.DB = d
 
 	return &h
 }

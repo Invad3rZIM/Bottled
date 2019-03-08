@@ -2,6 +2,7 @@
 package main
 
 import (
+	"bottled/handlers"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -45,7 +46,6 @@ const (
 
 func main() {
 
-	//dbUrl := os.Getenv(DATABASE_UR
 	//	db, err := sql.Open("postgres", "kirk:@/localhost")
 
 	//db, err := sql.Open("postgres", "user=kirk password=testing123 dbname=bottled sslmode=disable")
@@ -57,13 +57,13 @@ func main() {
 
 	//defer db.Close()
 
-	//	d := database.NewDatabaseConnection(db)
+	//d := database.NewDatabaseConnection(db)
 
 	//	fmt.Printf("\ndjdjdj" + os.Getenv("PORT"))
 
 	r := mux.NewRouter()
 
-	//	h := handlers.NewHandler(d)
+	h := handlers.NewHandler(nil)
 
 	//launch launches the background goroutine loop functions
 	//	go h.HeartCache.Launch()
@@ -80,20 +80,20 @@ func main() {
 	//	h.Hurt(users["rob"].GetUserID(), 5)
 	//	h.Hurt(users["rob"].GetUserID(), 5)
 
-	//	r.HandleFunc("/alive", ServerAliveHandler)
+	r.HandleFunc("/alive", ServerAliveHandler)
 	r.HandleFunc("/", Ping)
 
-	//	r.HandleFunc("/bottle/create", h.CreateBottleHandler).Methods("POST")
-	//	r.HandleFunc("/bottle/receive", h.GetBottlesHandler).Methods("GET")
+	r.HandleFunc("/bottle/create", h.CreateBottleHandler).Methods("POST")
+	r.HandleFunc("/bottle/receive", h.GetBottlesHandler).Methods("GET")
 
-	//	r.HandleFunc("/user/create", h.CreateUserHandler).Methods("POST")
+	r.HandleFunc("/user/create", h.CreateUserHandler).Methods("POST")
 
-	//	r.HandleFunc("/messages/init", h.SendFirstMessageHandler).Methods("POST")
-	//	r.HandleFunc("/messages/send", h.SendChatMessageHandler).Methods("POST")
+	r.HandleFunc("/messages/init", h.SendFirstMessageHandler).Methods("POST")
+	r.HandleFunc("/messages/send", h.SendChatMessageHandler).Methods("POST")
 
-	//	r.HandleFunc("/befriend", h.GiveFriendKey).Methods("POST")
+	r.HandleFunc("/befriend", h.GiveFriendKey).Methods("POST")
 
-	//	r.HandleFunc("/messages/getnew", h.GetNewMessagesHandler).Methods("GET")
+	r.HandleFunc("/messages/getnew", h.GetNewMessagesHandler).Methods("GET")
 
 	err := http.ListenAndServe(":"+os.Getenv("PORT"), r)
 

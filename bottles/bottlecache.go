@@ -13,9 +13,9 @@ type BottleCache struct {
 	Bottles       map[string]map[string]map[int]*bottle.Bottle
 	BottleSenders map[int]int
 	BottlesMade   int
-	DB            *database.DatabaseConnection
-	AllBottles    map[int]*bottle.Bottle
-	DBChanges     chan *bottles.Bottle
+	//DB            *database.DatabaseConnection
+	AllBottles map[int]*bottle.Bottle
+	DBChanges  chan *bottles.Bottle
 }
 
 func (bm *BottleCache) Launch() {
@@ -24,7 +24,7 @@ func (bm *BottleCache) Launch() {
 
 func (bm *BottleCache) CleanDB() {
 	for {
-		bm.DB.DeleteLifelessBottles()
+		//	bm.DB.DeleteLifelessBottles()
 
 		//only sweep database once every 5 minutes
 		time.Sleep(time.Duration(300) * time.Second)
@@ -39,9 +39,9 @@ func NewBottleCache(d *database.DatabaseConnection) *BottleCache {
 	bm := BottleCache{
 		Bottles:       make(map[string]map[string]map[int]*bottle.Bottle),
 		BottleSenders: make(map[int]int),
-		DB:            d,
-		AllBottles:    make(map[int]*bottle.Bottle),
-		DBChanges:     make(chan *bottle.Bottle, 100),
+		//	DB:            d,
+		AllBottles: make(map[int]*bottle.Bottle),
+		DBChanges:  make(chan *bottle.Bottle, 100),
 	}
 
 	n1 := []string{"local", "global"}
@@ -76,7 +76,7 @@ func (bm *BottleCache) CreateBottle(senderID int, message string, tag string, li
 	bm.BottleSenders[b.BottleID] = b.SenderID
 	bm.BottlesMade = bm.BottlesMade + 1
 
-	bm.DB.AddBottle(b)
+	//bm.DB.AddBottle(b)
 
 	return b
 }

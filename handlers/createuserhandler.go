@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"bottled/hearts/heart"
 	users "bottled/users/user"
 	"encoding/json"
 	"net/http"
@@ -55,8 +54,8 @@ func (h *Handler) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	h.UserCache.Users[user.UserID] = user
 
 	//add user to database
-	h.DB.AddUser(user)
-	h.DB.AddHeart(heart.NewHeart(user))
+	//	h.DB.AddUser(user)
+	//	h.DB.AddHeart(heart.NewHeart(user))
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)

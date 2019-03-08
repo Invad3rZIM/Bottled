@@ -10,8 +10,8 @@ import (
 )
 
 type HeartCache struct {
-	Hearts    map[int]*h.Heart
-	DB        *database.DatabaseConnection
+	Hearts map[int]*h.Heart
+	//	DB        *database.DatabaseConnection
 	DBChanges chan *h.Heart
 
 	//used for healing the hearts
@@ -21,8 +21,8 @@ type HeartCache struct {
 
 func NewHeartCache(d *database.DatabaseConnection) *HeartCache {
 	hc := HeartCache{
-		Hearts:    make(map[int]*h.Heart),
-		DB:        d,
+		Hearts: make(map[int]*h.Heart),
+		//	DB:        d,
 		DBChanges: make(chan *h.Heart, 100),
 
 		Wounded:  make(chan *h.Heart, 100),
@@ -41,24 +41,27 @@ func (hc *HeartCache) Launch() {
 //infinite loop of database changes
 func (hc *HeartCache) DatabaseUpdater() {
 	for {
-		h := <-hc.DBChanges
-		hc.DB.UpdateHearts(h)
+		//h := <-hc.DBChanges
+		//	hc.DB.UpdateHearts(h)
+		<-hc.DBChanges
 	}
 }
 
 func (hc *HeartCache) GetAllWoundedFromDatabase() error {
 
-	h, err := hc.DB.AllWounded()
+	//	h, err := hc.DB.AllWounded()
 
-	if err != nil {
-		return err
-	}
+	//if err != nil {
+	//	return err
+	//}
 
-	for _, v := range *h {
-		hc.Wounded <- v
-	}
+	//for _, v := range *h {
+	//	hc.Wounded <- v
+	//}
 
-	return nil
+	//	return nil
+
+	return errors.New("db not connected")
 }
 
 func (hc *HeartCache) Harm(userID int, amount int) error {
@@ -89,21 +92,23 @@ func (hc *HeartCache) GetHeart(userID int) (*h.Heart, error) {
 	}
 
 	//grabs heart from database
-	h, err := hc.DB.GetHeart(userID)
-
+	//h, err := hc.DB.GetHeart(userID)
+	err := errors.New("database not connected")
 	//if heart not in database
 	if err != nil {
 		return nil, err
 	}
 
-	hc.Hearts[userID] = h
+	//hc.Hearts[userID] = h
 
 	//if heart needs healing
-	if h.Current < h.Max {
-		hc.AddWounded(h)
-	}
+	//if h.Current < h.Max {
+	//	hc.AddWounded(h)
+	//}
 
-	return h, nil
+	//	return h, nil
+
+	return nil, err
 }
 
 func (hc *HeartCache) AddWounded(h *h.Heart) {

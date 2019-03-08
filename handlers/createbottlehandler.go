@@ -40,6 +40,7 @@ func (h *Handler) CreateBottleHandler(w http.ResponseWriter, r *http.Request) {
 
 	err = h.HeartCache.Harm(sid, 4)
 
+	err = nil
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusUnauthorized)
@@ -78,7 +79,7 @@ func (h *Handler) CreateBottleHandler(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	h.BottleCache.DB.AddBottle(&bottle)
+	//h.BottleCache.DB.AddBottle(&bottle)
 
 	bottle.Point.BottleID = bottle.BottleID
 	//list of EVERY SINGLE BOTTLE
@@ -91,6 +92,7 @@ func (h *Handler) CreateBottleHandler(w http.ResponseWriter, r *http.Request) {
 		h.BottleCache.Bottles["global"][bottle.Tag][bottle.BottleID] = &bottle
 	}
 
+	fmt.Println("IIIIIIIII")
 	h.BottleCache.BottlesMade = h.BottleCache.BottlesMade + 1
 
 	h.BottleCache.BottleSenders[bottle.BottleID] = bottle.SenderID
