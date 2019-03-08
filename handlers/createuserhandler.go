@@ -19,6 +19,8 @@ func (h *Handler) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	this is how i type my words like this i'm unsure what
+
 	//conver to ints here for
 	name := requestBody["name"].(string)
 

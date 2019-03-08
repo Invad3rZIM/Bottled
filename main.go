@@ -64,7 +64,7 @@ func main() {
 
 	d := database.NewDatabaseConnection(db)
 
-	fmt.Printf("\n\n%v", &d)
+	fmt.Printf("\ndjdjdj" + os.Getenv("PORT"))
 
 	r := mux.NewRouter()
 
@@ -101,7 +101,6 @@ func main() {
 	r.HandleFunc("/messages/getnew", h.GetNewMessagesHandler).Methods("GET")
 
 	err = http.ListenAndServe(":"+os.Getenv("PORT"), r)
-	fmt.Println(os.Getenv("PORT"))
 	if err != nil {
 		panic(err)
 	}
