@@ -2,17 +2,12 @@
 package main
 
 import (
-	"bottled/handlers"
-	"database/sql"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/mux"
-
-	"bottled/database"
 )
 
 func ServerAliveHandler(w http.ResponseWriter, r *http.Request) {
@@ -53,26 +48,26 @@ func main() {
 	//dbUrl := os.Getenv(DATABASE_UR
 	//	db, err := sql.Open("postgres", "kirk:@/localhost")
 
-	db, err := sql.Open("postgres", "user=kirk password=testing123 dbname=bottled sslmode=disable")
+	//db, err := sql.Open("postgres", "user=kirk password=testing123 dbname=bottled sslmode=disable")
 	//	db, err := sql.Open("postgres", dbUrl)
 
-	if err != nil {
-		panic(err)
-	}
+	//if err != nil {
+	//	panic(err)
+	//}
 
-	defer db.Close()
+	//defer db.Close()
 
-	d := database.NewDatabaseConnection(db)
+	//	d := database.NewDatabaseConnection(db)
 
-	fmt.Printf("\ndjdjdj" + os.Getenv("PORT"))
+	//	fmt.Printf("\ndjdjdj" + os.Getenv("PORT"))
 
 	r := mux.NewRouter()
 
-	h := handlers.NewHandler(d)
+	//	h := handlers.NewHandler(d)
 
 	//launch launches the background goroutine loop functions
-	go h.HeartCache.Launch()
-	go h.BottleCache.Launch()
+	//	go h.HeartCache.Launch()
+	//	go h.BottleCache.Launch()
 
 	//go h.MedicManager(10, 60)
 
@@ -85,23 +80,23 @@ func main() {
 	//	h.Hurt(users["rob"].GetUserID(), 5)
 	//	h.Hurt(users["rob"].GetUserID(), 5)
 
-	r.HandleFunc("/alive", ServerAliveHandler)
+	//	r.HandleFunc("/alive", ServerAliveHandler)
 	r.HandleFunc("/", Ping)
 
-	r.HandleFunc("/bottle/create", h.CreateBottleHandler).Methods("POST")
-	r.HandleFunc("/bottle/receive", h.GetBottlesHandler).Methods("GET")
+	//	r.HandleFunc("/bottle/create", h.CreateBottleHandler).Methods("POST")
+	//	r.HandleFunc("/bottle/receive", h.GetBottlesHandler).Methods("GET")
 
-	r.HandleFunc("/user/create", h.CreateUserHandler).Methods("POST")
+	//	r.HandleFunc("/user/create", h.CreateUserHandler).Methods("POST")
 
-	r.HandleFunc("/messages/init", h.SendFirstMessageHandler).Methods("POST")
-	r.HandleFunc("/messages/send", h.SendChatMessageHandler).Methods("POST")
+	//	r.HandleFunc("/messages/init", h.SendFirstMessageHandler).Methods("POST")
+	//	r.HandleFunc("/messages/send", h.SendChatMessageHandler).Methods("POST")
 
-	r.HandleFunc("/befriend", h.GiveFriendKey).Methods("POST")
+	//	r.HandleFunc("/befriend", h.GiveFriendKey).Methods("POST")
 
-	r.HandleFunc("/messages/getnew", h.GetNewMessagesHandler).Methods("GET")
+	//	r.HandleFunc("/messages/getnew", h.GetNewMessagesHandler).Methods("GET")
 
-	err = http.ListenAndServe(":"+os.Getenv("PORT"), r)
-	fmt.Println("READY")
+	err := http.ListenAndServe(":"+os.Getenv("PORT"), r)
+
 	if err != nil {
 		panic(err)
 	}
