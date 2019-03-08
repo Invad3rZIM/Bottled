@@ -1,16 +1,22 @@
 {
-	"ImportPath": "olympia",
+	"ImportPath": "bottled",
 	"GoVersion": "go1.10",
 	"GodepVersion": "v80",
 	"Deps": [
 		{
-			"ImportPath": "bottled/handlers",
-			"Rev": "bfe1d77e342befc52cc784ef8a3f93fc9a460416"
-		},
-		{
 			"ImportPath": "github.com/gorilla/mux",
 			"Comment": "v1.7.0-1-g8559a4f",
 			"Rev": "8559a4f775fc329165fe32bd4c2543de8ada8fce"
+		},
+		{
+			"ImportPath": "github.com/lib/pq",
+			"Comment": "v1.0.0-6-g9eb73ef",
+			"Rev": "9eb73efc1fcc404148b56765b0d3f61d9a5ef8ee"
+		},
+		{
+			"ImportPath": "github.com/lib/pq/oid",
+			"Comment": "v1.0.0-6-g9eb73ef",
+			"Rev": "9eb73efc1fcc404148b56765b0d3f61d9a5ef8ee"
 		}
 	]
 }
