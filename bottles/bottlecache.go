@@ -111,7 +111,7 @@ func (bm *BottleCache) CreateLocalBottles() {
 
 	tags := []string{"lolz", "#deep", "O.o", "stories"}
 
-	for i := 0; i < 200000; i++ {
+	for i := 0; i < 1000; i++ {
 		bid := utils.GenInt(0, 999999)
 		uid := utils.GenInt(0, 999999)
 
